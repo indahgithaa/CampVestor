@@ -32,8 +32,8 @@ class Buttons extends StatelessWidget {
           text,
           style: GoogleFonts.poppins(
             color: fontColor,
-            fontSize: 14,
-            fontWeight:  FontWeight.w500,
+            fontSize: 16,
+            fontWeight:  FontWeight.bold,
           ),
         ),
         onPressed: onClicked,

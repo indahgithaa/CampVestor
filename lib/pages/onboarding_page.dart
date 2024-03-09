@@ -3,6 +3,7 @@ import '../styles/color_styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import './widgets/buttons.dart';
+import './who_are_you.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -56,7 +57,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
               SizedBox(height: 14,),
               Buttons(
                 text: "Continue", 
-                onClicked: (){}, 
+                onClicked: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WhoAreYouPage()));
+                }, 
                 width: MediaQuery.of(context).size.width, 
                 backgroundColor: ColorStyles.primary, 
                 fontColor: ColorStyles.white
