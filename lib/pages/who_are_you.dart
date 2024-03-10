@@ -3,6 +3,8 @@ import '../styles/color_styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import './widgets/buttons.dart';
+import './investor/sign_in.dart';
+import './umkm/sign_in.dart';
 
 class WhoAreYouPage extends StatefulWidget {
   const WhoAreYouPage({super.key});
@@ -34,7 +36,9 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
           children: [
             Buttons(
               text: "Investor", 
-              onClicked: (){}, 
+              onClicked: (){
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInInvestor()));
+              }, 
               width: MediaQuery.of(context).size.width, 
               backgroundColor: ColorStyles.primary, 
               fontColor: ColorStyles.white
