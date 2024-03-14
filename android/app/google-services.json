@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "890860547430",
+    "project_id": "campvestor",
+    "storage_bucket": "campvestor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890860547430:android:06c943717e39e4206caca7",
+        "android_client_info": {
+          "package_name": "com.example.camp_vestor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVxWBUM7JqaEpm6kG0r9nv8KtG_yRBfwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
