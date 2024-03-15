@@ -7,6 +7,8 @@ import '../widgets/text_form.dart';
 import '../widgets/password_form.dart';
 import 'package:flutter/gestures.dart';
 import './sign_up.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignInInvestor extends StatefulWidget {
   const SignInInvestor({super.key});
@@ -16,7 +18,7 @@ class SignInInvestor extends StatefulWidget {
 }
 
 class _SignInInvestorState extends State<SignInInvestor> {
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
@@ -40,9 +42,9 @@ class _SignInInvestorState extends State<SignInInvestor> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFields(
-              textEditingController: usernameController, 
-              text: "Name", 
-              textInputType: TextInputType.name, 
+              textEditingController: emailController, 
+              text: "Email", 
+              textInputType: TextInputType.emailAddress, 
             ),
             SizedBox(height: 16,),
             PasswordTextFields(
@@ -62,7 +64,22 @@ class _SignInInvestorState extends State<SignInInvestor> {
             ),
             Buttons(
               text: "Sign In", 
-              onClicked: (){}, 
+              onClicked: ()async {
+                try {
+                  UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text
+                  );
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'user-not-found') {
+                    print('No user found for that email.');
+                  } else if (e.code == 'wrong-password') {
+                    print('Wrong password provided for that user.');
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
               width: MediaQuery.of(context).size.width, 
               backgroundColor: ColorStyles.primary, 
               fontColor: ColorStyles.white

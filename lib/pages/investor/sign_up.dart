@@ -155,7 +155,7 @@ class _SignUpInvestorState extends State<SignUpInvestor> {
                   );
 
                   await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-                    'username': usernameController.text, // Use the username from the controller
+                    'username': usernameController.text,
                   });
 
                 } on FirebaseAuthException catch (e) {
