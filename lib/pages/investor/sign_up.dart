@@ -6,6 +6,8 @@ import '../widgets/buttons.dart';
 import '../widgets/text_form.dart';
 import '../widgets/password_form.dart';
 import 'package:flutter/gestures.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpInvestor extends StatefulWidget {
   const SignUpInvestor({super.key});
@@ -61,7 +63,7 @@ class _SignUpInvestorState extends State<SignUpInvestor> {
             SizedBox(height: 16,),
             TextFields(
               textEditingController: emailController, 
-              text: "Name", 
+              text: "Email", 
               textInputType: TextInputType.emailAddress, 
             ),
             SizedBox(
@@ -145,7 +147,27 @@ class _SignUpInvestorState extends State<SignUpInvestor> {
             SizedBox(height: 32,),
             Buttons(
               text: "Sign Up", 
-              onClicked: (){}, 
+              onClicked: () async {
+                try {
+                  UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text
+                  );
+
+                  await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+                    'username': usernameController.text, // Use the username from the controller
+                  });
+
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'weak-password') {
+                    print('The password provided is too weak.');
+                  } else if (e.code == 'email-already-in-use') {
+                    print('The account already exists for that email.');
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              }, 
               width: MediaQuery.of(context).size.width, 
               backgroundColor: ColorStyles.primary, 
               fontColor: ColorStyles.white
