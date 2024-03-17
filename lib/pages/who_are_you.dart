@@ -37,7 +37,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
             Buttons(
               text: "Investor", 
               onClicked: (){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInInvestor()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SignInInvestor()));
               }, 
               width: MediaQuery.of(context).size.width, 
               backgroundColor: ColorStyles.primary, 
