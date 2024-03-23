@@ -54,7 +54,9 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
             SizedBox(height: 27,),
             Buttons(
               text: "UMKM", 
-              onClicked: (){}, 
+              onClicked: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SignInUMKM()));
+              }, 
               width: MediaQuery.of(context).size.width, 
               backgroundColor: ColorStyles.primary, 
               fontColor: ColorStyles.white

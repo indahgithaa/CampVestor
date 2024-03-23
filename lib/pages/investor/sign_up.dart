@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import '../../styles/color_styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/buttons.dart';
 import '../widgets/text_form.dart';
 import '../widgets/password_form.dart';
-import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
+import '../../styles/color_styles.dart';
 
 class SignUpInvestor extends StatefulWidget {
-  const SignUpInvestor({super.key});
+  const SignUpInvestor({Key? key}) : super(key: key);
 
   @override
-  State<SignUpInvestor> createState() => _SignUpInvestorState();
+  _SignUpInvestorState createState() => _SignUpInvestorState();
 }
 
 class _SignUpInvestorState extends State<SignUpInvestor> {
@@ -24,29 +24,30 @@ class _SignUpInvestorState extends State<SignUpInvestor> {
   bool _passwordVisible = false;
   bool? rememberMe = false;
 
-  void toggleRememberMe(bool? newValue) => setState(() {
-    rememberMe = newValue;
-  });
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  void toggleRememberMe(bool? newValue) => setState(() {
+        rememberMe = newValue;
+      });
 
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
     _passwordVisible = false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+      key: _scaffoldKey,
+      appBar: AppBar(
         leading: Icon(
-          Icons.arrow_back, color: ColorStyles.primary,
+          Icons.arrow_back,
+          color: ColorStyles.primary,
         ),
         title: Text(
           "Sign Up",
-          style: GoogleFonts.poppins(
-            fontSize: 16
-          ),
+          style: GoogleFonts.poppins(fontSize: 16),
         ),
         centerTitle: true,
       ),
@@ -56,61 +57,21 @@ class _SignUpInvestorState extends State<SignUpInvestor> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFields(
-              textEditingController: usernameController, 
-              text: "Name", 
-              textInputType: TextInputType.name, 
+              textEditingController: usernameController,
+              text: "Name",
+              textInputType: TextInputType.name,
             ),
-            SizedBox(height: 16,),
+            SizedBox(height: 16),
             TextFields(
-              textEditingController: emailController, 
-              text: "Email", 
-              textInputType: TextInputType.emailAddress, 
+              textEditingController: emailController,
+              text: "Email",
+              textInputType: TextInputType.emailAddress,
             ),
-            SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: 16),
+            PasswordTextFields(passwordController: passwordController),
+            SizedBox(height: 16),
             PasswordTextFields(
-              passwordController: passwordController
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: ColorStyles.greyBg.withOpacity(0.3)
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: 44,
-              child: TextFormField(
-                controller: confirmPasswordController,
-                keyboardType: TextInputType.visiblePassword,
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: ColorStyles.greyInvis,
-                ),
-                decoration: InputDecoration(
-                // filled: true,
-                  contentPadding: EdgeInsets.all(16),
-                  hintText: "Confirm Password",
-                  hintStyle: TextStyle(
-                    color: ColorStyles.greyInvis,
-                    fontSize: 16
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: ColorStyles.greyOutline, // Unfocused border color
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: ColorStyles.greyOutline, // Focused border color
-                    ),
-                  ),
-                ),
-                obscureText: !_passwordVisible,
-              ),
+              passwordController: confirmPasswordController,
             ),
             SizedBox(height: 18),
             Container(
@@ -119,7 +80,7 @@ class _SignUpInvestorState extends State<SignUpInvestor> {
               child: Row(
                 children: [
                   Checkbox(
-                    value: rememberMe, 
+                    value: rememberMe,
                     onChanged: (value) {
                       setState(() {
                         toggleRememberMe(value);
@@ -127,37 +88,40 @@ class _SignUpInvestorState extends State<SignUpInvestor> {
                     },
                     activeColor: ColorStyles.primary,
                     checkColor: ColorStyles.white,
-                    side: BorderSide(
-                      color: ColorStyles.greyOutline,
-                    ),
+                    side: BorderSide(color: ColorStyles.greyOutline),
                   ),
                   Flexible(
                     child: Text(
                       "Yes, I want to receive discounts, loyalty offers and other updates.",
                       overflow: TextOverflow.visible,
                       style: GoogleFonts.poppins(
-                        color: ColorStyles.grey2,
-                        fontSize: 10
-                      ),
+                          color: ColorStyles.grey2, fontSize: 10),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 32,),
+            SizedBox(height: 32),
             Buttons(
-              text: "Sign Up", 
+              text: "Sign Up",
               onClicked: () async {
                 try {
-                  UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  UserCredential userCredential = await FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
                     email: emailController.text,
-                    password: passwordController.text
+                    password: passwordController.text,
                   );
 
-                  await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(userCredential.user!.uid)
+                      .set({
                     'username': usernameController.text,
+                    'email': emailController.text,
                   });
 
+                  _showSuccessSnackbar();
+                  
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'weak-password') {
                     print('The password provided is too weak.');
@@ -167,17 +131,28 @@ class _SignUpInvestorState extends State<SignUpInvestor> {
                 } catch (e) {
                   print(e);
                 }
-              }, 
-              width: MediaQuery.of(context).size.width, 
-              backgroundColor: ColorStyles.primary, 
-              fontColor: ColorStyles.white
+              },
+              width: MediaQuery.of(context).size.width,
+              backgroundColor: ColorStyles.primary,
+              fontColor: ColorStyles.white,
             ),
-            SizedBox(
-              height: 12,
-            ),
+            SizedBox(height: 12),
           ],
         ),
       ),
     );
   }
+
+  void _showSuccessSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Berhasil mendaftar. Silakan login dengan email dan password Anda.',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: ColorStyles.primary, // Customize the Snackbar background color
+      ),
+    );
+  }
+
 }

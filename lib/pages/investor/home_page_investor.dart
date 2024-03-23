@@ -7,8 +7,10 @@ import '../widgets/text_form.dart';
 import '../widgets/password_form.dart';
 
 class HomePageInvestor extends StatefulWidget {
+  final String username;
   const HomePageInvestor({
     Key? key,
+    required this.username,
   });
 
   @override
@@ -22,12 +24,14 @@ class _HomePageInvestorState extends State<HomePageInvestor> {
       body: Column(
         children: [
           Container(
+            decoration: BoxDecoration(
+              color: ColorStyles.primary,
+            ),
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 Row(
                   children: [
-                    SvgPicture.asset('assets/foto-umkm.svg'),
                     SizedBox(width: 17),
                     Column(children: [
                         Text("Selamat Datang", 
@@ -38,7 +42,7 @@ class _HomePageInvestorState extends State<HomePageInvestor> {
                           ),
                         ),
                         Text(
-                          "Warung Mie",
+                          "${widget.username}",
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
